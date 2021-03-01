@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 
-class Spacing extends StatelessWidget {
+class SpacingWidth extends StatelessWidget {
   final double x;
-  final double y;
 
-  Spacing(this.x, this.y);
+  SpacingWidth(this.x);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: x,
+    );
+  }
+}
+class SpacingHeight extends StatelessWidget {
+  final double y;
+
+  SpacingHeight(this.y);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
       height: y,
     );
   }

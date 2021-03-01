@@ -65,7 +65,7 @@ class Promotions extends StatelessWidget {
                   )
                 ],
               ),
-              CustomButtton(text:'APPLY'),
+              CustomButtton(text:'APPLY')
             ],
           ),
         ),

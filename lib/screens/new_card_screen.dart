@@ -41,8 +41,14 @@ class NewCardScreen extends StatelessWidget {
                       cursorHeight: 25,
                       cursorColor: Colors.green.shade400,
                       decoration: InputDecoration(
-                        prefix: Icon(Icons.payment),
-                        suffix: Icon(Icons.camera_alt_outlined),
+                        prefixIcon: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(Icons.payment,color: Colors.black,),
+                        ),
+                        suffixIcon: Padding( 
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(Icons.camera_alt_outlined, color: Colors.black,),
+                        ),
                         filled: true,
                         hintText: 'Enter pick-up location',
                         hintStyle: TextStyle(fontWeight: FontWeight.w300),
@@ -62,66 +68,76 @@ class NewCardScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  //Row(
-                    //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                   //mainAxisSize: MainAxisSize.min,
-                  //children: [
-                    //TextField(
-                      //cursorHeight: 15,
-                      //cursorColor: Colors.green.shade400,
-                      //decoration: InputDecoration(
-                        //filled: true,
-                        //hintText: 'Enter pick-up location',
-                        //hintStyle: TextStyle(fontWeight: FontWeight.w300),
-                        //focusedBorder: OutlineInputBorder(
-                         //borderSide: BorderSide(
-                           //color: Colors.black26,
-                           //)
-                      //),
-                      //enabledBorder: OutlineInputBorder(
-                        //borderSide: BorderSide(
-                         //width: 2,
-                         //color: AppColors.designColor,
-                      //)
-                    //),
-                    //border: InputBorder.none,
-                    //fillColor: Colors.white12,
-                    //),
-                    //),
-                    //TextField(
-                        //         //cursorHeight: 15,
-                        //         cursorColor: Colors.green.shade400,
-                        //         decoration: InputDecoration(
-                        //           filled: true, 
-                        //           hintText: 'Secure code',
-                        //           hintStyle: TextStyle(fontWeight: FontWeight.w300),
-                        //           focusedBorder: OutlineInputBorder(
-                        //             borderSide: BorderSide(
-                        //               color: Colors.black26,
-                        //             )
-                        //           ),
-                        //           enabledBorder: OutlineInputBorder(
-                        //             borderSide: BorderSide(
-                        //             //  width: 2,
-                        //               color: AppColors.designColor,
-                        //             )
-                        //           ),
-                        //           border: InputBorder.none,
-                        //           fillColor: Colors.white12,
-                        //         ),
-                        //       ),
-                        //   ],),
-                        // )
-                ],),
-                Container( 
-                  alignment: Alignment.center, 
-                  padding: EdgeInsets.fromLTRB(
-                    16, MediaQuery.of(context).size.height / 1.55, 
-                    16, 5),
-                  child: Row(
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('Bolt may charge a small amount to confirm your card details. This is immediately refunded.',
-                      style: TextStyle(fontSize: 10)
+                      Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(15,18,5,0),
+                            child: TextField(
+                            cursorHeight: 15,
+                            cursorColor: Colors.green.shade400,
+                            decoration: InputDecoration(
+                              filled: true,
+                              hintText: 'Expire date',
+                              hintStyle: TextStyle(fontWeight: FontWeight.w300),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: AppColors.designColor,
+                                )
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                //width: 2,
+                                  color: Colors.black26,
+                                )
+                              ),
+                              border: InputBorder.none,
+                              fillColor: Colors.white12,
+                            ),
+                        ),
+                          ),
+                      ),
+                      Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(5,18,15,0), 
+                            child: TextField(
+                              cursorHeight: 15,
+                              cursorColor: Colors.green.shade400,
+                              decoration: InputDecoration(
+                              filled: true, 
+                              hintText: 'Secure code',
+                              hintStyle: TextStyle(fontWeight: FontWeight.w300),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: AppColors.designColor, 
+                                )
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  //  width: 2,
+                                  color: Colors.black26,
+                                )
+                              ),
+                              border: InputBorder.none,
+                              fillColor: Colors.white12,
+                            ),
+                        ),
+                          ),
+                      ),
+                    ],),
+                  ],),
+                  Container( 
+                    alignment: Alignment.center, 
+                    padding: EdgeInsets.fromLTRB(
+                      16, MediaQuery.of(context).size.height / 1.66, 
+                      16, 5),
+                      child: Row(
+                        children: [
+                          Text('Bolt may charge a small amount to confirm your card details. This is immediately refunded.',
+                        style: TextStyle(fontSize: 10)
                       ),
                       GestureDetector(child: 
                       Text('Learn more',
