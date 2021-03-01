@@ -1,7 +1,7 @@
-import 'dart:async';
+import 'package:bolt/providers/app_data.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import '../widget/main_drawer.dart';
 import '../screens/input_location_screen.dart';
 
@@ -13,57 +13,29 @@ class Screen1 extends StatefulWidget {
 }
 
 class _Screen1State extends State<Screen1> {
-
-  Completer<GoogleMapController>_controllerGoogleMap = Completer();
-  GoogleMapController newGoogleMapController;
-
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.4279, -122.0857),
-    zoom: 12,
-  );
-  GlobalKey<ScaffoldState>scaffoldKey= new GlobalKey<ScaffoldState>();
-
-  Position currentPosition;
-  var geoLocator = Geolocator();
-  double bottomPaddingOfMap = 0;
-
-  void locatePosition() async {
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    currentPosition = position;
-
-    LatLng latlatPosition = LatLng(position.latitude, position.longitude);
-
-    CameraPosition cameraPosition = new CameraPosition(
-      target:latlatPosition,
-      zoom: 14
-    );
-    newGoogleMapController.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-  }
+  GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<AppData>(context);
     return SafeArea(
       child: Scaffold(
         key: scaffoldKey,
         drawer: MainDrawer(),
         backgroundColor: Colors.white,
-        body:   Stack(
-          children:[ 
-            GoogleMap( 
-              padding: EdgeInsets.only(bottom: bottomPaddingOfMap),
+        body: Stack(
+          children: [
+            GoogleMap(
+              padding: EdgeInsets.only(bottom: provider.bottomPaddingOfMap),
               mapType: MapType.normal,
               myLocationButtonEnabled: true,
               compassEnabled: true,
-              onMapCreated: (GoogleMapController controller){
-                _controllerGoogleMap.complete(controller);
-                newGoogleMapController = controller;
-                locatePosition();
-                setState(() {
-                  bottomPaddingOfMap = 300.0;
-                });
-                locatePosition();
+              onMapCreated: (GoogleMapController controller) {
+                provider.locatePosition();
+
+                provider.bottomPaddingOfMap = 300.0;
               },
-              initialCameraPosition: _kGooglePlex,
+              initialCameraPosition: provider.kGooglePlex,
               myLocationEnabled: true,
               zoomGesturesEnabled: true,
               zoomControlsEnabled: true,
@@ -72,110 +44,114 @@ class _Screen1State extends State<Screen1> {
               top: 45.0,
               left: 22.0,
               child: GestureDetector(
-                onTap: (){
+                onTap: () {
                   scaffoldKey.currentState.openDrawer();
                 },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(22),
-                  boxShadow: [
-                    BoxShadow(
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(22),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black,
+                          //blurRadius: 6,
+                          //spreadRadius: 0.15,
+                          offset: Offset(0.7, 0.7),
+                        )
+                      ]),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      Icons.menu,
                       color: Colors.black,
-                      //blurRadius: 6,
-                      //spreadRadius: 0.15,
-                      offset: Offset(0.7, 0.7),    
-                    )
-                  ]
-                ),
-                child: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  child: Icon(Icons.menu, color: Colors.black,),
-                  radius: 20.0,
+                    ),
+                    radius: 20.0,
+                  ),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            right: 0,
-            left: 0,
-            bottom: 0,
-            child: Container(
-              height: 230, 
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(topLeft:Radius.circular(18), topRight: Radius.circular(18)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black54,
-                    blurRadius: 6,
-                    spreadRadius: 0.15,
-                    offset: Offset(0.7, 0.7),
-                  )
-                ],
-              ),
-              child: Column(
-                children: [
-                  InkWell(
-                    onTap: (){},
-                    child: Icon(
-                      Icons.drag_handle, 
-                      size: 20,
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
-                    child: Text('Nice to see you!')
-                  ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.fromLTRB(25, 0, 0, 10),
-                    child: Text(
-                      'Where are you going?', 
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontFamily: 'Sofia Pro',
-                        fontWeight: FontWeight.bold,
-                      ),
+            Positioned(
+              right: 0,
+              left: 0,
+              bottom: 0,
+              child: Container(
+                height: 230,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(18),
+                      topRight: Radius.circular(18)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black54,
+                      blurRadius: 6,
+                      spreadRadius: 0.15,
+                      offset: Offset(0.7, 0.7),
                     )
-                  ),
-                  InkWell(
-                    onTap: (){
-                      Navigator.of(context).pushReplacementNamed(InputLocation.routeName);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(18.0),
-                      child: Card(elevation: 3, 
-                      child: Container(
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.fromLTRB(10,10,0,20),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max, 
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Icon(Icons.search, 
-                              color: Colors.black,
-                              size: 26,
-                            ),
-                            Text(
-                              'Search destination',
-                              style: TextStyle(
-                                fontSize: 19,
-                                fontFamily: 'Avenir'
-                              ),
-                            ),
-                          ]),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    InkWell(
+                      onTap: () {},
+                      child: Icon(
+                        Icons.drag_handle,
+                        size: 20,
+                      ),
+                    ),
+                    Container(
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
+                        child: Text('Nice to see you!')),
+                    Container(
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.fromLTRB(25, 0, 0, 10),
+                        child: Text(
+                          'Where are you going?',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'Sofia Pro',
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushReplacementNamed(InputLocation.routeName);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Card(
+                          elevation: 3,
+                          child: Container(
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.fromLTRB(10, 10, 0, 20),
+                            child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Icon(
+                                    Icons.search,
+                                    color: Colors.black,
+                                    size: 26,
+                                  ),
+                                  Text(
+                                    'Search destination',
+                                    style: TextStyle(
+                                        fontSize: 19, fontFamily: 'Avenir'),
+                                  ),
+                                ]),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          )
-        ],),
+            )
+          ],
+        ),
       ),
     );
-  }                        
+  }
 }

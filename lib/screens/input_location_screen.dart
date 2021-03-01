@@ -1,13 +1,6 @@
-import 'dart:async';
 import 'package:bolt/providers/app_data.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
-import 'package:google_maps_webservice/places.dart';
 import 'package:provider/provider.dart';
-import '../helpers/location_helpers.dart';
-import '../helpers/http_request.dart';
 import '../screens/screens1.dart';
 
 class InputLocation extends StatefulWidget {
@@ -16,46 +9,15 @@ class InputLocation extends StatefulWidget {
   _InputLocationState createState() => _InputLocationState();
 }
 
-final homeScaffoldKey = GlobalKey<ScaffoldState>();
-final searchScaffoldKey = GlobalKey<ScaffoldState>();
-
-GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: GOOGLE_API_KEY);
-
 class _InputLocationState extends State<InputLocation> {
-  Completer<GoogleMapController> _controllerGoogleMap = Completer();
-  final pickUpTEC = TextEditingController();
-  final destinationTEC = TextEditingController();   
-  Position currentPosition;
-  final geoLocator = Geolocator();
-  double bottomPaddingOfMap = 0;
-  void locatePosition() async {
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    currentPosition = position;
+  AppData get appData => Provider.of<AppData>(context, listen: false);
 
-    LatLng latLatPosition = LatLng(position.latitude, position.longitude);
-
-    CameraPosition cameraPosition =
-        new CameraPosition(target: latLatPosition, zoom: 14);
-    //newGoogleMapController.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-  }
-
-  void onError(PlacesAutocompleteResponse response) {
-    homeScaffoldKey.currentState
-        .showSnackBar(SnackBar(content: Text(response.errorMessage)));
-  }
-  placeAdress(){ 
-    setState(() {
-        String placeAddress = Provider.of<AppData>(context).pickUpLocation.placeName ?? "";
-        pickUpTEC.text = placeAddress;
-    });
-  }
-  Mode _mode = Mode.overlay;
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<AppData>(context);
     return SafeArea(
       child: Scaffold(
-        key: homeScaffoldKey,
+        key: provider.homeScaffoldKey,
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -92,88 +54,90 @@ class _InputLocationState extends State<InputLocation> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(40,18,45,0), 
+                      padding: const EdgeInsets.fromLTRB(40, 18, 45, 0),
                       child: TextField(
-                          cursorHeight: 25,
-                          cursorColor: Colors.green.shade400,
-                          decoration: InputDecoration(
-                            filled: true,
-                            hintText: 'Enter pick-up location',
-                            hintStyle: TextStyle(fontWeight: FontWeight.w300),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                              color: Colors.black26,
-                            )),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                              width: 2,
-                              color: Colors.black26,
-                            )),
-                            border: InputBorder.none,
-                            fillColor: Colors.white12,
-                          ),
-                          controller: pickUpTEC,
+                        cursorHeight: 25,
+                        cursorColor: Colors.green.shade400,
+                        decoration: InputDecoration(
+                          filled: true,
+                          hintText: 'Enter pick-up location',
+                          hintStyle: TextStyle(fontWeight: FontWeight.w300),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                            color: Colors.black26,
+                          )),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                            width: 2,
+                            color: Colors.black26,
+                          )),
+                          border: InputBorder.none,
+                          fillColor: Colors.white12,
                         ),
+                        controller: provider.pickUpTEC,
+                      ),
                     ),
-                     Row(children:[
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(5,18,0,0),
-                            child: Icon(
-                              Icons.location_on,
-                              color: Colors.black54,
-                              size: 20,
-                            ),
+                    Row(children: [
+                      Flexible(
+                        flex: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(5, 18, 0, 0),
+                          child: Icon(
+                            Icons.location_on,
+                            color: Colors.black54,
+                            size: 20,
                           ),
-                        ),  
-                        Flexible(
-                          flex: 10,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(15,18,0,0),
-                            child: GestureDetector(
-                              onTap: () => _handlePressButton(),
-                              child: AbsorbPointer(
-                                child: TextField(
-                                  cursorHeight: 25,
-                                  cursorColor: Colors.green.shade400,
-                                  decoration: InputDecoration(
-                                    hintText: 'Enter destination',
-                                    hintStyle:
-                                        TextStyle(fontWeight: FontWeight.w300),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                      color: Colors.black26,
-                                    )),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                      width: 2,
-                                      color: Colors.black26,
-                                    )),
-                                    border: InputBorder.none,
-                                    filled: true,
-                                    fillColor: Colors.white24,
-                                  ),
-                                  controller: destinationTEC,
-                                  onChanged: (val) {
-                                    findPlace(val);
-                                  },
+                        ),
+                      ),
+                      Flexible(
+                        flex: 10,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(15, 18, 0, 0),
+                          child: GestureDetector(
+                            onTap: () => provider.handlePressButton(context),
+                            child: AbsorbPointer(
+                              child: TextField(
+                                cursorHeight: 25,
+                                cursorColor: Colors.green.shade400,
+                                decoration: InputDecoration(
+                                  hintText: 'Enter destination',
+                                  hintStyle:
+                                      TextStyle(fontWeight: FontWeight.w300),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                    color: Colors.black26,
+                                  )),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                    width: 2,
+                                    color: Colors.black26,
+                                  )),
+                                  border: InputBorder.none,
+                                  filled: true,
+                                  fillColor: Colors.white24,
                                 ),
+                                controller: provider.destinationTEC,
+                                onChanged: (val) {
+                                  provider.findPlace(val);
+                                },
                               ),
                             ),
                           ),
                         ),
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(5,18,5,0),
-                            child: GestureDetector(
-                              child: Icon(Icons.add, size: 30,),
+                      ),
+                      Flexible(
+                        flex: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(5, 18, 5, 0),
+                          child: GestureDetector(
+                            child: Icon(
+                              Icons.add,
+                              size: 30,
                             ),
                           ),
                         ),
-                      ]
-                    ),
+                      ),
+                    ]),
                   ],
                 ),
               ),
@@ -214,46 +178,5 @@ class _InputLocationState extends State<InputLocation> {
         ),
       ),
     );
-  }
-
-  Future<void> _handlePressButton() async {
-    Prediction p = await PlacesAutocomplete.show(
-      context: context,
-      apiKey: GOOGLE_API_KEY,
-      onError: onError,
-      mode: _mode,
-      language: "en",
-    );
-
-    displayPrediction(p, homeScaffoldKey.currentState);
-  }
-
-  Future<Null> displayPrediction(Prediction p, ScaffoldState scaffold) async {
-    if (p != null) {
-      PlacesDetailsResponse detail =
-          await _places.getDetailsByPlaceId(p.placeId);
-      final lat = detail.result.geometry.location.lat;
-      final lng = detail.result.geometry.location.lng;
-
-      setState(() {
-        destinationTEC.text = p.description;
-      });
-
-      scaffold.showSnackBar(
-        SnackBar(content: Text("${p.description} - $lat/$lng")),
-      );
-    }
-  }
-
-  void findPlace(String placeName) async {
-    if (placeName.length > 1) {
-      String autoCompleteUrl =
-          "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$placeName&key=$GOOGLE_API_KEY&sessiontoken=1234567890&components=country:ng";
-      var res = await RequestAssistance.getRequest(autoCompleteUrl);
-      if (res == "failed") {
-        return;
-      }
-      print(res);
-    }
   }
 }
