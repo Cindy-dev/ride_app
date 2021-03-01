@@ -212,6 +212,10 @@ class _InputLocationState extends State<InputLocation> {
       final lat = detail.result.geometry.location.lat;
       final lng = detail.result.geometry.location.lng;
 
+      setState(() {
+        destinationTEC.text = p.description;
+      });
+
       scaffold.showSnackBar(
         SnackBar(content: Text("${p.description} - $lat/$lng")),
       );
