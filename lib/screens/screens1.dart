@@ -32,11 +32,15 @@ class _Screen1State extends State<Screen1> {
               compassEnabled: true,
               onMapCreated: (GoogleMapController controller) {
                 provider.locatePosition();
-
-                provider.bottomPaddingOfMap = 300.0;
+                //provider.controllerGoogleMap.complete(controller);
+                setState(() {
+                  provider.bottomPaddingOfMap = 300.0;
+                });
               },
               initialCameraPosition: provider.kGooglePlex,
               myLocationEnabled: true,
+              polylines: provider.polyLine,
+              markers: provider.markers,
               zoomGesturesEnabled: true,
               zoomControlsEnabled: true,
             ),

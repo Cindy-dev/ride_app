@@ -94,7 +94,10 @@ class _InputLocationState extends State<InputLocation> {
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(15, 18, 0, 0),
                           child: GestureDetector(
-                            onTap: () => provider.handlePressButton(context),
+                            onTap: (){
+                              provider.handlePressButton(context);
+                            //  Navigator.pushReplacementNamed(context,Screen1.routeName);  
+                            },
                             child: AbsorbPointer(
                               child: TextField(
                                 cursorHeight: 25,
@@ -117,7 +120,7 @@ class _InputLocationState extends State<InputLocation> {
                                   fillColor: Colors.white24,
                                 ),
                                 controller: provider.destinationTEC,
-                                onChanged: (val) {
+                                 onChanged: (val) {
                                   provider.findPlace(val);
                                 },
                               ),

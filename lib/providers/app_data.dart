@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:bolt/helpers/http_request.dart';
 import 'package:bolt/helpers/location_helpers.dart';
 import 'package:flutter/material.dart';
@@ -7,11 +6,47 @@ import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+//import 'package:google_maps_webservice/directions.dart';
 import 'package:google_maps_webservice/places.dart';
 import '../models/bolt.dart';
 
 class AppData extends ChangeNotifier {
+  bool locationServicesActive = true;
   GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: GOOGLE_API_KEY);
+ 
+  static const LatLng _center = const LatLng(33.738045, 73.084488);
+
+  final Set<Polyline>polyLine ={};
+  final Set<Marker> markers = {};
+
+  LatLng _lastMapPosition = _center;
+  List<LatLng> latlng = List();
+  LatLng _new = LatLng(33.738045, 73.084488);
+  LatLng _news = LatLng(33.567997728, 72.6359974);
+
+
+  // latlng.add(_new);
+  // latlng.add(_news);
+   void _onAddMarkerButtonPressed(){
+    // getDistanceTime();
+     markers.add(Marker(
+       markerId: MarkerId(_lastMapPosition.toString()),
+       position: _lastMapPosition,
+       infoWindow: InfoWindow(
+         title: 'Really cool place',
+         snippet: '5 Star Rating',
+       ),
+       icon: BitmapDescriptor.defaultMarker,
+     ));
+
+     polyLine.add(Polyline(
+       polylineId: PolylineId(_lastMapPosition.toString()),
+       visible: true,
+       points: latlng,
+       color: Colors.blue,
+     ));
+   }
+
 
   final CameraPosition kGooglePlex = CameraPosition(
     target: LatLng(37.4279, -122.0857),
@@ -26,6 +61,8 @@ class AppData extends ChangeNotifier {
 
   final homeScaffoldKey = GlobalKey<ScaffoldState>();
   final searchScaffoldKey = GlobalKey<ScaffoldState>();
+
+  String get encodedPoly => null;
 
   void onError(PlacesAutocompleteResponse response) {
     homeScaffoldKey.currentState
@@ -53,9 +90,22 @@ class AppData extends ChangeNotifier {
     notifyListeners();
   }
 
+  Bolt _dropOffLocation;
+  Bolt get dropOffLocation => _dropOffLocation;
+  set dropOffLocation(Bolt val){
+    _dropOffLocation = val;
+    notifyListeners();
+  }
+
   void updatePickUpLocationAddress(Bolt pickUpAddress) {
     pickUpLocation = pickUpAddress;
     print(pickUpLocation);
+    notifyListeners();
+  }
+
+   void dropOffLocationAddress(Bolt dropOffAddress) {
+    pickUpLocation = dropOffAddress;
+    print(dropOffLocation);
     notifyListeners();
   }
 
@@ -66,7 +116,7 @@ class AppData extends ChangeNotifier {
     final latLatPosition =
         LatLng(currentPosition.latitude, currentPosition.longitude);
 
-    final coordinates = new Coordinates(1.10, 45.50);
+    final coordinates = new Coordinates(currentPosition.latitude, currentPosition.longitude);
     final addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
     pickUpTEC.text = addresses.first.addressLine;
   }
@@ -80,10 +130,10 @@ class AppData extends ChangeNotifier {
       language: "en",
     );
 
-    displayPrediction(p, homeScaffoldKey.currentState);
+    displayPrediction(p, homeScaffoldKey.currentState, encodedPoly);
   }
 
-  Future<Null> displayPrediction(Prediction p, ScaffoldState scaffold) async {
+  Future<Null> displayPrediction(Prediction p, ScaffoldState scaffold, String encodedPoly) async {
     if (p != null) {
       PlacesDetailsResponse detail =
           await _places.getDetailsByPlaceId(p.placeId);
@@ -91,6 +141,7 @@ class AppData extends ChangeNotifier {
       final lng = detail.result.geometry.location.lng;
 
       destinationTEC.text = p.description;
+      notifyListeners();
     }
   }
 
@@ -105,4 +156,6 @@ class AppData extends ChangeNotifier {
       print(res);
     }
   }
-}
+  
+
+ }

@@ -1,4 +1,7 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import '../models/bolt.dart';
 import '../providers/app_data.dart';
@@ -33,4 +36,30 @@ class HelperMethods{
 
     return placeAddress;
   }
+
+  static Future <String> obtainDirectionsDetail(LatLng initialPosition, LatLng finalPosition) async{
+    String directionUrl = "https://maps.googleapis.com/maps/api/directions/json?origin=${initialPosition.latitude},${initialPosition.longitude}&destination=${finalPosition.latitude},${finalPosition.longitude}&key=$GOOGLE_API_KEY";
+
+    http.Response response = await http.get(directionUrl);
+    Map values = jsonDecode(response.body);
+    return values["routes"][0]["overview_polyline"]["points"];
+    //var res = await RequestAssistance.getRequest(directionUrl);
+
+  //   if(res == "failed")
+  //   {
+  //     return null;
+  //   }
+
+  //     DirectionDetails directionDetails = DirectionDetails();
+
+  //     directionDetails.encodedPoints = res["routes"][0]["overview_polyline"]["points"];
+
+  //     directionDetails.distanceText = res["routes"][0]["legs"][0]["distance"]["text"];
+  //     directionDetails.distanceValue = res["routes"][0]["legs"][0]["distance"]["value"];
+
+  //     directionDetails.durationText = res["routes"][0]["legs"][0]["duration"]["text"];
+  //     directionDetails.durationValue = res["routes"][0]["legs"][0]["duration"]["value"];
+
+  //     return directionDetails;
+   }
 }
