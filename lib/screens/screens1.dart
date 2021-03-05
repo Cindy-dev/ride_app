@@ -39,7 +39,7 @@ class _Screen1State extends State<Screen1> {
               },
               initialCameraPosition: provider.kGooglePlex,
               myLocationEnabled: true,
-              polylines: provider.polyLine,
+              polylines: provider.polylines,
               markers: provider.markers,
               zoomGesturesEnabled: true,
               zoomControlsEnabled: true,
@@ -121,12 +121,12 @@ class _Screen1State extends State<Screen1> {
                     InkWell(
                       onTap: () {
                         Navigator.of(context)
-                            .pushReplacementNamed(InputLocation.routeName);
+                            .pushNamed(InputLocation.routeName);
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(18.0),
                         child: Card(
-                          elevation: 3,
+                          elevation: 2,
                           child: Container(
                             alignment: Alignment.center,
                             padding: const EdgeInsets.fromLTRB(10, 10, 0, 20),
@@ -138,6 +138,9 @@ class _Screen1State extends State<Screen1> {
                                     Icons.search,
                                     color: Colors.black,
                                     size: 26,
+                                  ),
+                                  SizedBox(
+                                    width: 20,
                                   ),
                                   Text(
                                     'Search destination',

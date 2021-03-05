@@ -49,99 +49,102 @@ class _InputLocationState extends State<InputLocation> {
                   ],
                 ),
               ),
-              Card(
-                elevation: 0.5,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(40, 18, 45, 0),
-                      child: TextField(
-                        cursorHeight: 25,
-                        cursorColor: Colors.green.shade400,
-                        decoration: InputDecoration(
-                          filled: true,
-                          hintText: 'Enter pick-up location',
-                          hintStyle: TextStyle(fontWeight: FontWeight.w300),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                            color: Colors.black26,
-                          )),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                            width: 2,
-                            color: Colors.black26,
-                          )),
-                          border: InputBorder.none,
-                          fillColor: Colors.white12,
-                        ),
-                        controller: provider.pickUpTEC,
-                      ),
-                    ),
-                    Row(children: [
-                      Flexible(
-                        flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(5, 18, 0, 0),
-                          child: Icon(
-                            Icons.location_on,
-                            color: Colors.black54,
-                            size: 20,
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Card(
+                  elevation: 0.5,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        TextField(
+                          cursorHeight: 25,
+                          cursorColor: Colors.green.shade400,
+                          decoration: InputDecoration(
+                            filled: true,
+                            hintText: 'Enter pick-up location',
+                            hintStyle: TextStyle(fontWeight: FontWeight.w300),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                              color: Colors.black26,
+                            )),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                              width: 2,
+                              color: Colors.black26,
+                            )),
+                            border: InputBorder.none,
+                            fillColor: Colors.white12,
                           ),
+                          controller: provider.pickUpTEC,
                         ),
-                      ),
-                      Flexible(
-                        flex: 10,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(15, 18, 0, 0),
-                          child: GestureDetector(
-                            onTap: (){
-                              provider.handlePressButton(context);
-                            //  Navigator.pushReplacementNamed(context,Screen1.routeName);  
-                            },
-                            child: AbsorbPointer(
-                              child: TextField(
-                                cursorHeight: 25,
-                                cursorColor: Colors.green.shade400,
-                                decoration: InputDecoration(
-                                  hintText: 'Enter destination',
-                                  hintStyle:
-                                      TextStyle(fontWeight: FontWeight.w300),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                    color: Colors.black26,
-                                  )),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                    width: 2,
-                                    color: Colors.black26,
-                                  )),
-                                  border: InputBorder.none,
-                                  filled: true,
-                                  fillColor: Colors.white24,
-                                ),
-                                controller: provider.destinationTEC,
-                                 onChanged: (val) {
-                                  provider.findPlace(val);
-                                },
+                        Row(children: [
+                          Flexible(
+                            flex: 1,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(5, 18, 0, 0),
+                              child: Icon(
+                                Icons.location_on,
+                                color: Colors.black54,
+                                size: 20,
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                      Flexible(
-                        flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(5, 18, 5, 0),
-                          child: GestureDetector(
-                            child: Icon(
-                              Icons.add,
-                              size: 30,
+                          Flexible(
+                            flex: 10,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(15, 18, 0, 0),
+                              child: GestureDetector(
+                                onTap: (){
+                                  provider.handlePressButton(context);
+                                //  Navigator.pushReplacementNamed(context,Screen1.routeName);  
+                                },
+                                child: AbsorbPointer(
+                                  child: TextField(
+                                    cursorHeight: 25,
+                                    cursorColor: Colors.green.shade400,
+                                    decoration: InputDecoration(
+                                      hintText: 'Enter destination',
+                                      hintStyle:
+                                          TextStyle(fontWeight: FontWeight.w300),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.black26,
+                                      )),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        width: 2,
+                                        color: Colors.black26,
+                                      )),
+                                      border: InputBorder.none,
+                                      filled: true,
+                                      fillColor: Colors.white24,
+                                    ),
+                                    controller: provider.destinationTEC,
+                                     onChanged: (val) {
+                                      provider.findPlace(val);
+                                    },
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    ]),
-                  ],
+                          Flexible(
+                            flex: 1,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(5, 18, 5, 0),
+                              child: GestureDetector(
+                                child: Icon(
+                                  Icons.add,
+                                  size: 30,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ]),
+                      ],
+                    ),
+                  ),
                 ),
               ),
               // Provider.of<AppData>(context).pickUpLocation != null
