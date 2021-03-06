@@ -14,7 +14,7 @@ class FreeRides extends StatelessWidget {
           child: Row(children: [
             GestureDetector(
               child: Icon(Icons.arrow_back, color: Colors.black,),
-              onTap: ()=>Navigator.of(context).pushReplacementNamed(Screen1.routeName); 
+              onTap: ()=>Navigator.of(context).pushReplacementNamed(Screen1.routeName) 
             ),
             Padding(
               padding: const EdgeInsets.all(20),
